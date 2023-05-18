@@ -36,7 +36,8 @@ apt-get install mysql-client
 ```
 9. Configure root username and password for MYSQL
 
-```mysql
+```
+mysql
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password123';
 exit
 ```
