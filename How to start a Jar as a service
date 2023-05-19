@@ -1,0 +1,37 @@
+Step 1 : Navigate to "cd /lib/systemd/system"
+Step 2 : Create .service file with any name "vi mysqldb.service"
+Step 3 : Write and Quit the below script in mysqldb.service file
+
+ 
+
+[Unit]
+#Description can be any name
+Description=MySQL_SpringBoot_App
+After=syslog.target network.target
+
+ 
+
+[Service]
+SuccessExitStatus=143
+User=root
+#provide your jar target path
+ExecStart=java -jar /home/ubadmin/spring-boot-mysql-example/target/spring-boot-mysql-0.0.1-SNAPSHOT.jar
+Restart=on-failure
+
+ 
+
+[Install]
+WantedBy=multi-user.target
+
+ 
+
+Step 4 : Run "systemctl enable mysqldb.service" command to create system link
+
+Step 5 : Run "systemctl daemon-reload" command 
+#Note: The above command should be run whenever you make changes to the service file else not required.
+
+Step 6 : Run "systemctl start mysqldb.service" command to start the service
+
+Step 7 : Run "systemctl status mysqldb.service --no-pager " command to verify the status
+
+Step 8 : Browse the link
