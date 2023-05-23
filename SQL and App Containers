@@ -1,0 +1,105 @@
+Steps for springboot and MYSQL 
+create network
+--------------
+sudo docker network create mysidnetwork
+sudo docker network ls
+266d8b6e823f   mysidnetwork     bridge    local
+
+ 
+
+
+create volume
+-------------
+sudo docker volume create myvolume
+sudo docker volume ls
+local     myvolume
+
+ 
+
+ 
+
+I have 2 docker files 
+1 for Springboot Dockerfile  ---> imagename -> springbootimg
+2 for Mysql mysqldockerfile
+
+ 
+
+
+Dockerfile for springboot
+-------------------------
+FROM anapsix/alpine-java
+WORKDIR /app
+COPY target/spring-boot-mysql-0.0.1-SNAPSHOT.jar /app/spring-boot-mysql-0.0.1-SNAPSHOT.jar
+EXPOSE 8080
+CMD ["java", "-jar", "/app/spring-boot-mysql-0.0.1-SNAPSHOT.jar"]
+
+ 
+
+mysqldockerfile
+---------------
+FROM mysql
+CMD ["mysqld", "--default-authentication-plugin=mysql_native_password"]
+
+ 
+
+
+Building the springboot image using Dockerfile
+----------------------------------------------
+sudo docker build -t springbootimg .
+
+ 
+
+ 
+
+Building the mysql image using mysqldockerfile
+----------------------------------------------
+
+ 
+
+If you have a Dockerfile with a different name, you can specify the filename using the -f or --file option when building the Docker image. Here's the updated command:
+sudo docker build -t mysqlimage -f mysqldockerfile .
+
+ 
+
+sudo docker images
+mysqlimage      latest    05a4c95492e4   4 weeks ago     564MB
+springbootimg   latest    24ae26de473f   6 minutes ago   501MB
+
+ 
+
+ 
+
+Now change the app property settings
+-----------------------------------
+cd spring-boot-mysql-example/src/main/resources/
+vi application.properties
+change the localhost to mysqlimagecontainer(containerName)/container IP address
+
+ 
+
+
+sudo docker run -p 9090:8080 --name springbootcontainer --network mysidnetwork springbootimg
+
+ 
+
+sudo docker run -d --network mysidnetwork -p 3307:3306 --name mysqlimagecontainer -e MYSQL_ROOT_PASSWORD=password123 -e MYSQL_SATABASE=springboot_mysql_example -v myvolume:/var/lib/mysql mysqlimage
+
+ 
+
+sudo docker ps
+sudo docker ps -a
+sudo docker rm 
+sudo docker rmi
+sudo docker stop
+sudo docker inspect
+sudo docker exec
+mysql -uroot -p
+
+ 
+
+
+sudo
+
+ 
+
+show databases;
